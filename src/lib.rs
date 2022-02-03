@@ -8,6 +8,7 @@ use windows::{
     UI::Xaml::{Hosting::DesktopWindowXamlSource, UIElement},
 };
 
+#[repr(transparent)]
 pub struct XamlIsland {
     source: DesktopWindowXamlSource,
 }
