@@ -9,18 +9,13 @@ use windows::{
 };
 
 pub struct XamlIsland {
-    island_hwnd: HWND,
     source: DesktopWindowXamlSource,
 }
 impl XamlIsland {
     pub fn new() -> Result<Self> {
         let source = DesktopWindowXamlSource::new()?;
-        let interop: IDesktopWindowXamlSourceNative = source.cast()?;
 
-        Ok(XamlIsland {
-            island_hwnd: unsafe { interop.WindowHandle() }?,
-            source,
-        })
+        Ok(XamlIsland { source })
     }
     pub fn attach(&self, hwnd: HWND) -> Result<()> {
         let interop: IDesktopWindowXamlSourceNative = self.source.cast()?;
@@ -36,10 +31,7 @@ impl XamlIsland {
         let interop: IDesktopWindowXamlSourceNative = source.cast()?;
         unsafe { interop.AttachToWindow(hwnd) }?;
 
-        let island = XamlIsland {
-            island_hwnd: unsafe { interop.WindowHandle() }?,
-            source,
-        };
+        let island = XamlIsland { source };
 
         let (width, height) = inner_size(hwnd)?;
         island.resize(width, height)?;
@@ -47,18 +39,10 @@ impl XamlIsland {
         Ok(island)
     }
     pub fn resize(&self, width: i32, height: i32) -> Result<()> {
-        unsafe {
-            SetWindowPos(
-                self.island_hwnd,
-                HWND::default(),
-                0,
-                0,
-                width,
-                height,
-                SWP_SHOWWINDOW,
-            )
-            .ok()
-        }
+        let source: IDesktopWindowXamlSourceNative = self.source.cast()?;
+        let hwnd = unsafe { source.WindowHandle() }?;
+
+        unsafe { SetWindowPos(hwnd, HWND::default(), 0, 0, width, height, SWP_SHOWWINDOW).ok() }
     }
     pub fn set_content<'a>(&self, value: impl IntoParam<'a, UIElement>) -> Result<()> {
         self.source.SetContent(value)
