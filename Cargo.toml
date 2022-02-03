@@ -3,4 +3,12 @@ name = "rust-xaml-island"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
+[dependencies.windows]
+version = "0.30"
+features = [
+    "alloc",
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_WinRT_Xaml",
+    "UI_Xaml_Hosting",
+]
