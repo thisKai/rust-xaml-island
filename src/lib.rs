@@ -27,14 +27,8 @@ impl XamlIsland {
         Ok(())
     }
     pub fn attached(hwnd: HWND) -> Result<Self> {
-        let source = DesktopWindowXamlSource::new()?;
-        let interop: IDesktopWindowXamlSourceNative = source.cast()?;
-        unsafe { interop.AttachToWindow(hwnd) }?;
-
-        let island = XamlIsland { source };
-
-        let (width, height) = inner_size(hwnd)?;
-        island.resize(width, height)?;
+        let island = Self::new()?;
+        island.attach(hwnd)?;
 
         Ok(island)
     }
