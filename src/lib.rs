@@ -21,8 +21,7 @@ impl XamlIsland {
         let interop: IDesktopWindowXamlSourceNative = self.source.cast()?;
         unsafe { interop.AttachToWindow(hwnd) }?;
 
-        let (width, height) = inner_size(hwnd)?;
-        self.resize(width, height)?;
+        self.fill_window(hwnd)?;
 
         Ok(())
     }
@@ -37,6 +36,12 @@ impl XamlIsland {
         let hwnd = unsafe { source.WindowHandle() }?;
 
         unsafe { SetWindowPos(hwnd, HWND::default(), 0, 0, width, height, SWP_SHOWWINDOW).ok() }
+    }
+    pub fn fill_window(&self, hwnd: HWND) -> Result<()> {
+        let (width, height) = inner_size(hwnd)?;
+        self.resize(width, height)?;
+
+        Ok(())
     }
     pub fn set_content<'a>(&self, value: impl IntoParam<'a, UIElement>) -> Result<()> {
         self.source.SetContent(value)
