@@ -1,0 +1,21 @@
+[package]
+name = "basic-winit"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+xaml-island = { path = "../.." }
+winit = "0.26"
+
+[dependencies.windows]
+version = "0.30"
+features = [
+    "alloc",
+    "Win32_Foundation",
+    "Foundation_Collections",
+    "UI_Xaml_Controls",
+    "UI_Xaml_Controls_Primitives",
+]
+
+[build-dependencies]
+embed-resource = "1"
