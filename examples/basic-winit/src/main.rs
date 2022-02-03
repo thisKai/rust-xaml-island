@@ -19,7 +19,7 @@ use {
 fn main() -> Result<()> {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
-    let island = XamlIsland::attach(HWND(window.hwnd() as _))?;
+    let island = XamlIsland::attached(HWND(window.hwnd() as _))?;
 
     let grid = Grid::new()?;
     let button = Button::new()?;

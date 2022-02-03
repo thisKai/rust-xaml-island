@@ -13,17 +13,35 @@ pub struct XamlIsland {
     source: DesktopWindowXamlSource,
 }
 impl XamlIsland {
-    pub fn attach(hwnd: HWND) -> Result<Self> {
-        let (width, height) = inner_size(hwnd)?;
-
+    pub fn new() -> Result<Self> {
         let source = DesktopWindowXamlSource::new()?;
         let interop: IDesktopWindowXamlSourceNative = source.cast()?;
-        unsafe {
-            interop.AttachToWindow(hwnd)?;
-        }
-        let island_hwnd = unsafe { interop.WindowHandle() }?;
 
-        let island = XamlIsland { island_hwnd, source };
+        Ok(XamlIsland {
+            island_hwnd: unsafe { interop.WindowHandle() }?,
+            source,
+        })
+    }
+    pub fn attach(&self, hwnd: HWND) -> Result<()> {
+        let interop: IDesktopWindowXamlSourceNative = self.source.cast()?;
+        unsafe { interop.AttachToWindow(hwnd) }?;
+
+        let (width, height) = inner_size(hwnd)?;
+        self.resize(width, height)?;
+
+        Ok(())
+    }
+    pub fn attached(hwnd: HWND) -> Result<Self> {
+        let source = DesktopWindowXamlSource::new()?;
+        let interop: IDesktopWindowXamlSourceNative = source.cast()?;
+        unsafe { interop.AttachToWindow(hwnd) }?;
+
+        let island = XamlIsland {
+            island_hwnd: unsafe { interop.WindowHandle() }?,
+            source,
+        };
+
+        let (width, height) = inner_size(hwnd)?;
         island.resize(width, height)?;
 
         Ok(island)
