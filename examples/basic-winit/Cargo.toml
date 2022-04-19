@@ -8,7 +8,7 @@ xaml-island = { path = "../.." }
 winit = "0.26"
 
 [dependencies.windows]
-version = "0.30"
+version = "0.35"
 features = [
     "alloc",
     "Win32_Foundation",
