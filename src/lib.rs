@@ -20,19 +20,18 @@ impl XamlIsland {
 
         Ok(XamlIsland { source })
     }
+    pub fn attached(hwnd: HWND) -> Result<Self> {
+        let island = Self::new()?;
+        island.attach(hwnd)?;
+        island.fill_window(hwnd)?;
+
+        Ok(island)
+    }
     pub fn attach(&self, hwnd: HWND) -> Result<()> {
         let interop: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
         unsafe { interop.AttachToWindow(hwnd) }?;
 
-        self.fill_window(hwnd)?;
-
         Ok(())
-    }
-    pub fn attached(hwnd: HWND) -> Result<Self> {
-        let island = Self::new()?;
-        island.attach(hwnd)?;
-
-        Ok(island)
     }
     pub fn hwnd(&self) -> Result<HWND> {
         let source: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
