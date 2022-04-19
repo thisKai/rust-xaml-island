@@ -19,7 +19,7 @@ use {
 fn main() -> Result<()> {
     let event_loop = EventLoop::new();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
-    let island = XamlIsland::attached(HWND(window.hwnd() as _))?;
+    let island = unsafe { XamlIsland::attached(HWND(window.hwnd() as _))? };
 
     let grid = Grid::new()?;
     let button = Button::new()?;
@@ -45,7 +45,7 @@ fn main() -> Result<()> {
             Event::WindowEvent { event, window_id } if window_id == window.id() => match event {
                 WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
                 WindowEvent::Resized(new_size) => {
-                    let _ = island.resize(new_size.width as _, new_size.height as _);
+                    let _ = unsafe { island.resize(new_size.width as _, new_size.height as _) };
                 }
                 _ => (),
             },
