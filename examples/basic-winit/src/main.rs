@@ -31,7 +31,7 @@ fn main() -> Result<()> {
         .SetHorizontalAlignment(HorizontalAlignment::Center)?;
     button
         .cast::<ButtonBase>()?
-        .Click(RoutedEventHandler::new(|sender, event| {
+        .Click(RoutedEventHandler::new(|_sender, _event| {
             println!("Click");
             Ok(())
         }))?;
