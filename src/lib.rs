@@ -1,9 +1,9 @@
 use windows::{
     core::{Interface, IntoParam, Result},
     Win32::{
-        Foundation::{HWND, RECT},
-        System::WinRT::Xaml::IDesktopWindowXamlSourceNative,
-        UI::WindowsAndMessaging::{GetClientRect, SetWindowPos, SWP_SHOWWINDOW},
+        Foundation::{BOOL, HWND, RECT},
+        System::WinRT::Xaml::IDesktopWindowXamlSourceNative2,
+        UI::WindowsAndMessaging::{GetClientRect, SetWindowPos, MSG, SWP_SHOWWINDOW},
     },
     UI::Xaml::{Hosting::DesktopWindowXamlSource, UIElement},
 };
@@ -19,7 +19,7 @@ impl XamlIsland {
         Ok(XamlIsland { source })
     }
     pub fn attach(&self, hwnd: HWND) -> Result<()> {
-        let interop: IDesktopWindowXamlSourceNative = self.source.cast()?;
+        let interop: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
         unsafe { interop.AttachToWindow(hwnd) }?;
 
         self.fill_window(hwnd)?;
@@ -33,7 +33,7 @@ impl XamlIsland {
         Ok(island)
     }
     pub fn resize(&self, width: i32, height: i32) -> Result<()> {
-        let source: IDesktopWindowXamlSourceNative = self.source.cast()?;
+        let source: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
         let hwnd = unsafe { source.WindowHandle() }?;
 
         unsafe { SetWindowPos(hwnd, HWND::default(), 0, 0, width, height, SWP_SHOWWINDOW).ok() }
@@ -46,6 +46,10 @@ impl XamlIsland {
     }
     pub fn set_content<'a>(&self, value: impl IntoParam<'a, UIElement>) -> Result<()> {
         self.source.SetContent(value)
+    }
+    pub fn pre_translate_message(&self, message: *const MSG, result: *mut BOOL) -> Result<()> {
+        let source: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
+        unsafe { source.PreTranslateMessage(message, result) }
     }
 }
 
