@@ -3,7 +3,9 @@ use windows::{
     Win32::{
         Foundation::{BOOL, HWND, RECT},
         System::WinRT::Xaml::IDesktopWindowXamlSourceNative2,
-        UI::WindowsAndMessaging::{GetClientRect, SetWindowPos, MSG, SWP_SHOWWINDOW},
+        UI::WindowsAndMessaging::{
+            GetClientRect, SetWindowPos, MSG, SET_WINDOW_POS_FLAGS, SWP_SHOWWINDOW,
+        },
     },
     UI::Xaml::{Hosting::DesktopWindowXamlSource, UIElement},
 };
@@ -32,11 +34,25 @@ impl XamlIsland {
 
         Ok(island)
     }
-    pub fn resize(&self, width: i32, height: i32) -> Result<()> {
+    pub fn set_position(&self, x: i32, y: i32, width: i32, height: i32) -> Result<()> {
+        self.set_position_with_flags(x, y, width, height, SWP_SHOWWINDOW)
+    }
+    pub fn set_position_with_flags(
+        &self,
+        x: i32,
+        y: i32,
+        width: i32,
+        height: i32,
+        flags: SET_WINDOW_POS_FLAGS,
+    ) -> Result<()> {
         let source: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
-        let hwnd = unsafe { source.WindowHandle() }?;
-
-        unsafe { SetWindowPos(hwnd, HWND::default(), 0, 0, width, height, SWP_SHOWWINDOW).ok() }
+        unsafe {
+            let hwnd = source.WindowHandle()?;
+            SetWindowPos(hwnd, HWND::default(), x, y, width, height, flags).ok()
+        }
+    }
+    pub fn resize(&self, width: i32, height: i32) -> Result<()> {
+        self.set_position(0, 0, width, height)
     }
     pub fn fill_window(&self, hwnd: HWND) -> Result<()> {
         let (width, height) = inner_size(hwnd)?;
