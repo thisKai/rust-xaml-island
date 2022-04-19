@@ -33,6 +33,9 @@ impl XamlIsland {
 
         Ok(())
     }
+    pub fn source(&self) -> &DesktopWindowXamlSource {
+        &self.source
+    }
     pub fn hwnd(&self) -> Result<HWND> {
         let source: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
         unsafe { source.WindowHandle() }
