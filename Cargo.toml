@@ -7,6 +7,13 @@ members = [
 name = "xaml-island"
 version = "0.1.0"
 edition = "2021"
+description = "Xaml islands for rust"
+homepage = "https://github.com/thisKai/rust-xaml-island"
+repository = "https://github.com/thisKai/rust-xaml-island"
+documentation = "https://docs.rs/xaml-island"
+license = "MIT"
+keywords = ["windows", "xaml", "island", "desktop", "gui"]
+categories = ["os::windows-apis", "api-bindings", "gui"]
 
 [dependencies.windows]
 version = ">= 0.30, <= 0.35"
