@@ -1,20 +1,18 @@
-use {
-    windows::{
-        core::{Interface, Result},
-        Win32::Foundation::HWND,
-        UI::Xaml::{
-            Controls::{Button, ContentControl, Grid, Panel, Primitives::ButtonBase, TextBlock},
-            FrameworkElement, HorizontalAlignment, RoutedEventHandler,
-        },
+use windows::{
+    core::{Interface, Result},
+    Win32::Foundation::HWND,
+    UI::Xaml::{
+        Controls::{Button, ContentControl, Grid, Panel, Primitives::ButtonBase, TextBlock},
+        FrameworkElement, HorizontalAlignment, RoutedEventHandler,
     },
-    winit::{
-        event::{Event, WindowEvent},
-        event_loop::{ControlFlow, EventLoop},
-        platform::windows::WindowExtWindows,
-        window::WindowBuilder,
-    },
-    xaml_island::XamlIsland,
 };
+use winit::{
+    event::{Event, WindowEvent},
+    event_loop::{ControlFlow, EventLoop},
+    platform::windows::WindowExtWindows,
+    window::WindowBuilder,
+};
+use xaml_island::XamlIsland;
 
 fn main() -> Result<()> {
     let event_loop = EventLoop::new();
