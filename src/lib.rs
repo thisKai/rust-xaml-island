@@ -34,6 +34,10 @@ impl XamlIsland {
 
         Ok(island)
     }
+    pub fn hwnd(&self) -> Result<HWND> {
+        let source: IDesktopWindowXamlSourceNative2 = self.source.cast()?;
+        unsafe { source.WindowHandle() }
+    }
     pub fn set_position(&self, x: i32, y: i32, width: i32, height: i32) -> Result<()> {
         self.set_position_with_flags(x, y, width, height, SWP_SHOWWINDOW)
     }
