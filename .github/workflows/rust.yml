@@ -1,0 +1,30 @@
+name: Rust
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  doc:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build
+      run: |
+        cargo doc
+        echo '<meta http-equiv="refresh" content="0; url=xaml_island">' > target/doc/index.html
+
+    - name: Deploy to Github Pages
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: target/doc
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
